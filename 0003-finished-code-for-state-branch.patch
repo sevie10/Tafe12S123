@@ -1,0 +1,987 @@
+From 0b048a5a368ce241a8c7e76ccd34b99d02deab6c Mon Sep 17 00:00:00 2001
+From: Jacob <jacob.thiele@student.tafesa.edu.au>
+Date: Tue, 4 Apr 2017 09:15:16 +0930
+Subject: [PATCH 3/4] finished code for state branch
+
+---
+ VendorMaintenance/Program.cs                    |   4 +-
+ VendorMaintenance/VendorMaintenance.csproj      |  18 ++
+ VendorMaintenance/frmAddModifyState.cs          | 100 +++++++++++
+ VendorMaintenance/frmAddModifyState.designer.cs | 163 ++++++++++++++++++
+ VendorMaintenance/frmAddModifyState.resx        | 120 +++++++++++++
+ VendorMaintenance/frmState.cs                   | 143 ++++++++++++++++
+ VendorMaintenance/frmState.designer.cs          | 215 ++++++++++++++++++++++++
+ VendorMaintenance/frmState.resx                 | 120 +++++++++++++
+ 8 files changed, 882 insertions(+), 1 deletion(-)
+ create mode 100644 VendorMaintenance/frmAddModifyState.cs
+ create mode 100644 VendorMaintenance/frmAddModifyState.designer.cs
+ create mode 100644 VendorMaintenance/frmAddModifyState.resx
+ create mode 100644 VendorMaintenance/frmState.cs
+ create mode 100644 VendorMaintenance/frmState.designer.cs
+ create mode 100644 VendorMaintenance/frmState.resx
+
+diff --git a/VendorMaintenance/Program.cs b/VendorMaintenance/Program.cs
+index 02aea13..3e8a7d1 100644
+--- a/VendorMaintenance/Program.cs
++++ b/VendorMaintenance/Program.cs
+@@ -15,7 +15,9 @@ namespace VendorMaintenance
+         {
+             Application.EnableVisualStyles();
+             Application.SetCompatibleTextRenderingDefault(false);
+-            Application.Run(new frmTerm());
++            Application.Run(new frmVendorMaintenance());
++            //Application.Run(new frmTerm());
++            //Application.Run(new frmState());
+         }
+     }
+ }
+diff --git a/VendorMaintenance/VendorMaintenance.csproj b/VendorMaintenance/VendorMaintenance.csproj
+index bbf4a03..fbf3707 100644
+--- a/VendorMaintenance/VendorMaintenance.csproj
++++ b/VendorMaintenance/VendorMaintenance.csproj
+@@ -58,6 +58,12 @@
+   </ItemGroup>
+   <ItemGroup>
+     <Compile Include="DataContext.cs" />
++    <Compile Include="frmAddModifyState.cs">
++      <SubType>Form</SubType>
++    </Compile>
++    <Compile Include="frmAddModifyState.designer.cs">
++      <DependentUpon>frmAddModifyState.cs</DependentUpon>
++    </Compile>
+     <Compile Include="frmAddModifyTerm.cs">
+       <SubType>Form</SubType>
+     </Compile>
+@@ -70,6 +76,12 @@
+     <Compile Include="frmAddModifyVendor.Designer.cs">
+       <DependentUpon>frmAddModifyVendor.cs</DependentUpon>
+     </Compile>
++    <Compile Include="frmState.cs">
++      <SubType>Form</SubType>
++    </Compile>
++    <Compile Include="frmState.designer.cs">
++      <DependentUpon>frmState.cs</DependentUpon>
++    </Compile>
+     <Compile Include="frmTerm.cs">
+       <SubType>Form</SubType>
+     </Compile>
+@@ -95,9 +107,15 @@
+     <None Include="Payables.dbml.layout">
+       <DependentUpon>Payables.dbml</DependentUpon>
+     </None>
++    <EmbeddedResource Include="frmAddModifyState.resx">
++      <DependentUpon>frmAddModifyState.cs</DependentUpon>
++    </EmbeddedResource>
+     <EmbeddedResource Include="frmAddModifyTerm.resx">
+       <DependentUpon>frmAddModifyTerm.cs</DependentUpon>
+     </EmbeddedResource>
++    <EmbeddedResource Include="frmState.resx">
++      <DependentUpon>frmState.cs</DependentUpon>
++    </EmbeddedResource>
+     <EmbeddedResource Include="frmTerm.resx">
+       <DependentUpon>frmTerm.cs</DependentUpon>
+     </EmbeddedResource>
+diff --git a/VendorMaintenance/frmAddModifyState.cs b/VendorMaintenance/frmAddModifyState.cs
+new file mode 100644
+index 0000000..1a43f92
+--- /dev/null
++++ b/VendorMaintenance/frmAddModifyState.cs
+@@ -0,0 +1,100 @@
++﻿using System;
++using System.Collections.Generic;
++using System.ComponentModel;
++using System.Data;
++using System.Drawing;
++using System.Linq;
++using System.Text;
++using System.Windows.Forms;
++
++namespace VendorMaintenance
++{
++    public partial class frmAddModifyState : Form
++    {
++        public frmAddModifyState()
++        {
++            InitializeComponent();
++        }
++        
++        public bool addState;
++        public State state;
++
++        private void frmAddModifyState_Load(object sender, EventArgs e)
++        {
++            if (addState)
++            {
++                this.Text = "Add State";
++            }
++            else
++            {
++                this.Text = "Modify State";
++                this.DisplayStateData();
++            }
++        }
++
++        private void DisplayStateData()
++        {
++            txtStateCode.Text = state.StateCode;
++            txtStateName.Text = state.StateName;
++            txtFirstZip.Text = state.FirstZipCode.ToString();
++            txtLastZip.Text = state.LastZipCode.ToString();
++        }
++
++        private void btnAccept_Click(object sender, EventArgs e)
++        {
++            if (IsValidData())
++            {
++                if (addState)
++                {
++                    state = new State();
++                    this.PutStateData(state);
++                    DataContext.payables.States.InsertOnSubmit(state);
++                    try
++                    {
++                        DataContext.payables.SubmitChanges();
++                        this.DialogResult = DialogResult.OK;
++                        MessageBox.Show("State code " + Convert.ToString(state.StateCode) + " has been added to the States table");
++                    }
++                    catch (Exception ex)
++                    {
++                        MessageBox.Show(ex.Message, ex.GetType().ToString());
++                    }
++                }
++                else
++                {
++                    this.PutStateData(state);
++                    try
++                    {
++                        DataContext.payables.SubmitChanges();
++                        this.DialogResult = DialogResult.OK;
++                    }
++                    catch (Exception ex)
++                    {
++                        MessageBox.Show(ex.Message, ex.GetType().ToString());
++                    }
++                }
++            }
++        }
++
++        private bool IsValidData()
++        {
++            if (Validator.IsPresent(txtStateCode) && Validator.IsPresent(txtStateName) && Validator.IsPresent(txtFirstZip) && Validator.IsPresent(txtLastZip))
++                return true;
++            else
++                return false;
++        
++        }
++        private void PutStateData(State state)
++        {
++            state.StateCode = txtStateCode.Text;
++            state.StateName = txtStateName.Text;
++            state.FirstZipCode = Int32.Parse(txtFirstZip.Text);
++            state.LastZipCode = Int32.Parse(txtLastZip.Text);
++        }
++           
++        private void btnCancel_Click(object sender, EventArgs e)
++        {
++            this.Hide();
++        }
++    }
++}
+diff --git a/VendorMaintenance/frmAddModifyState.designer.cs b/VendorMaintenance/frmAddModifyState.designer.cs
+new file mode 100644
+index 0000000..7993833
+--- /dev/null
++++ b/VendorMaintenance/frmAddModifyState.designer.cs
+@@ -0,0 +1,163 @@
++﻿namespace VendorMaintenance
++{
++    partial class frmAddModifyState
++    {
++        /// <summary>
++        /// Required designer variable.
++        /// </summary>
++        private System.ComponentModel.IContainer components = null;
++
++        /// <summary>
++        /// Clean up any resources being used.
++        /// </summary>
++        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
++        protected override void Dispose(bool disposing)
++        {
++            if (disposing && (components != null))
++            {
++                components.Dispose();
++            }
++            base.Dispose(disposing);
++        }
++
++        #region Windows Form Designer generated code
++
++        /// <summary>
++        /// Required method for Designer support - do not modify
++        /// the contents of this method with the code editor.
++        /// </summary>
++        private void InitializeComponent()
++        {
++            this.btnAccept = new System.Windows.Forms.Button();
++            this.btnCancel = new System.Windows.Forms.Button();
++            this.txtLastZip = new System.Windows.Forms.TextBox();
++            this.label4 = new System.Windows.Forms.Label();
++            this.txtFirstZip = new System.Windows.Forms.TextBox();
++            this.label3 = new System.Windows.Forms.Label();
++            this.txtStateName = new System.Windows.Forms.TextBox();
++            this.label2 = new System.Windows.Forms.Label();
++            this.txtStateCode = new System.Windows.Forms.TextBox();
++            this.label1 = new System.Windows.Forms.Label();
++            this.SuspendLayout();
++            // 
++            // btnAccept
++            // 
++            this.btnAccept.Location = new System.Drawing.Point(15, 110);
++            this.btnAccept.Name = "btnAccept";
++            this.btnAccept.Size = new System.Drawing.Size(124, 44);
++            this.btnAccept.TabIndex = 0;
++            this.btnAccept.Text = "Accept";
++            this.btnAccept.UseVisualStyleBackColor = true;
++            this.btnAccept.Click += new System.EventHandler(this.btnAccept_Click);
++            // 
++            // btnCancel
++            // 
++            this.btnCancel.Location = new System.Drawing.Point(148, 110);
++            this.btnCancel.Name = "btnCancel";
++            this.btnCancel.Size = new System.Drawing.Size(124, 44);
++            this.btnCancel.TabIndex = 1;
++            this.btnCancel.Text = "Cancel";
++            this.btnCancel.UseVisualStyleBackColor = true;
++            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
++            // 
++            // txtLastZip
++            // 
++            this.txtLastZip.Location = new System.Drawing.Point(78, 84);
++            this.txtLastZip.Name = "txtLastZip";
++            this.txtLastZip.Size = new System.Drawing.Size(190, 20);
++            this.txtLastZip.TabIndex = 16;
++            // 
++            // label4
++            // 
++            this.label4.AutoSize = true;
++            this.label4.Location = new System.Drawing.Point(12, 87);
++            this.label4.Name = "label4";
++            this.label4.Size = new System.Drawing.Size(45, 13);
++            this.label4.TabIndex = 15;
++            this.label4.Text = "Last Zip";
++            // 
++            // txtFirstZip
++            // 
++            this.txtFirstZip.Location = new System.Drawing.Point(78, 58);
++            this.txtFirstZip.Name = "txtFirstZip";
++            this.txtFirstZip.Size = new System.Drawing.Size(190, 20);
++            this.txtFirstZip.TabIndex = 14;
++            // 
++            // label3
++            // 
++            this.label3.AutoSize = true;
++            this.label3.Location = new System.Drawing.Point(12, 61);
++            this.label3.Name = "label3";
++            this.label3.Size = new System.Drawing.Size(44, 13);
++            this.label3.TabIndex = 13;
++            this.label3.Text = "First Zip";
++            // 
++            // txtStateName
++            // 
++            this.txtStateName.Location = new System.Drawing.Point(78, 32);
++            this.txtStateName.Name = "txtStateName";
++            this.txtStateName.Size = new System.Drawing.Size(190, 20);
++            this.txtStateName.TabIndex = 12;
++            // 
++            // label2
++            // 
++            this.label2.AutoSize = true;
++            this.label2.Location = new System.Drawing.Point(12, 35);
++            this.label2.Name = "label2";
++            this.label2.Size = new System.Drawing.Size(63, 13);
++            this.label2.TabIndex = 11;
++            this.label2.Text = "State Name";
++            // 
++            // txtStateCode
++            // 
++            this.txtStateCode.Location = new System.Drawing.Point(78, 6);
++            this.txtStateCode.Name = "txtStateCode";
++            this.txtStateCode.Size = new System.Drawing.Size(190, 20);
++            this.txtStateCode.TabIndex = 10;
++            // 
++            // label1
++            // 
++            this.label1.AutoSize = true;
++            this.label1.Location = new System.Drawing.Point(12, 9);
++            this.label1.Name = "label1";
++            this.label1.Size = new System.Drawing.Size(60, 13);
++            this.label1.TabIndex = 9;
++            this.label1.Text = "State Code";
++            // 
++            // frmAddModifyState
++            // 
++            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
++            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
++            this.ClientSize = new System.Drawing.Size(284, 166);
++            this.Controls.Add(this.txtLastZip);
++            this.Controls.Add(this.label4);
++            this.Controls.Add(this.txtFirstZip);
++            this.Controls.Add(this.label3);
++            this.Controls.Add(this.txtStateName);
++            this.Controls.Add(this.label2);
++            this.Controls.Add(this.txtStateCode);
++            this.Controls.Add(this.label1);
++            this.Controls.Add(this.btnCancel);
++            this.Controls.Add(this.btnAccept);
++            this.Name = "frmAddModifyState";
++            this.Text = "frmAddModifyState";
++            this.Load += new System.EventHandler(this.frmAddModifyState_Load);
++            this.ResumeLayout(false);
++            this.PerformLayout();
++
++        }
++
++        #endregion
++
++        private System.Windows.Forms.Button btnAccept;
++        private System.Windows.Forms.Button btnCancel;
++        private System.Windows.Forms.TextBox txtLastZip;
++        private System.Windows.Forms.Label label4;
++        private System.Windows.Forms.TextBox txtFirstZip;
++        private System.Windows.Forms.Label label3;
++        private System.Windows.Forms.TextBox txtStateName;
++        private System.Windows.Forms.Label label2;
++        private System.Windows.Forms.TextBox txtStateCode;
++        private System.Windows.Forms.Label label1;
++    }
++}
+\ No newline at end of file
+diff --git a/VendorMaintenance/frmAddModifyState.resx b/VendorMaintenance/frmAddModifyState.resx
+new file mode 100644
+index 0000000..7080a7d
+--- /dev/null
++++ b/VendorMaintenance/frmAddModifyState.resx
+@@ -0,0 +1,120 @@
++﻿<?xml version="1.0" encoding="utf-8"?>
++<root>
++  <!-- 
++    Microsoft ResX Schema 
++    
++    Version 2.0
++    
++    The primary goals of this format is to allow a simple XML format 
++    that is mostly human readable. The generation and parsing of the 
++    various data types are done through the TypeConverter classes 
++    associated with the data types.
++    
++    Example:
++    
++    ... ado.net/XML headers & schema ...
++    <resheader name="resmimetype">text/microsoft-resx</resheader>
++    <resheader name="version">2.0</resheader>
++    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
++    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
++    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
++    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
++    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
++        <value>[base64 mime encoded serialized .NET Framework object]</value>
++    </data>
++    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
++        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
++        <comment>This is a comment</comment>
++    </data>
++                
++    There are any number of "resheader" rows that contain simple 
++    name/value pairs.
++    
++    Each data row contains a name, and value. The row also contains a 
++    type or mimetype. Type corresponds to a .NET class that support 
++    text/value conversion through the TypeConverter architecture. 
++    Classes that don't support this are serialized and stored with the 
++    mimetype set.
++    
++    The mimetype is used for serialized objects, and tells the 
++    ResXResourceReader how to depersist the object. This is currently not 
++    extensible. For a given mimetype the value must be set accordingly:
++    
++    Note - application/x-microsoft.net.object.binary.base64 is the format 
++    that the ResXResourceWriter will generate, however the reader can 
++    read any of the formats listed below.
++    
++    mimetype: application/x-microsoft.net.object.binary.base64
++    value   : The object must be serialized with 
++            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
++            : and then encoded with base64 encoding.
++    
++    mimetype: application/x-microsoft.net.object.soap.base64
++    value   : The object must be serialized with 
++            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
++            : and then encoded with base64 encoding.
++
++    mimetype: application/x-microsoft.net.object.bytearray.base64
++    value   : The object must be serialized into a byte array 
++            : using a System.ComponentModel.TypeConverter
++            : and then encoded with base64 encoding.
++    -->
++  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
++    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
++    <xsd:element name="root" msdata:IsDataSet="true">
++      <xsd:complexType>
++        <xsd:choice maxOccurs="unbounded">
++          <xsd:element name="metadata">
++            <xsd:complexType>
++              <xsd:sequence>
++                <xsd:element name="value" type="xsd:string" minOccurs="0" />
++              </xsd:sequence>
++              <xsd:attribute name="name" use="required" type="xsd:string" />
++              <xsd:attribute name="type" type="xsd:string" />
++              <xsd:attribute name="mimetype" type="xsd:string" />
++              <xsd:attribute ref="xml:space" />
++            </xsd:complexType>
++          </xsd:element>
++          <xsd:element name="assembly">
++            <xsd:complexType>
++              <xsd:attribute name="alias" type="xsd:string" />
++              <xsd:attribute name="name" type="xsd:string" />
++            </xsd:complexType>
++          </xsd:element>
++          <xsd:element name="data">
++            <xsd:complexType>
++              <xsd:sequence>
++                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
++                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
++              </xsd:sequence>
++              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
++              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
++              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
++              <xsd:attribute ref="xml:space" />
++            </xsd:complexType>
++          </xsd:element>
++          <xsd:element name="resheader">
++            <xsd:complexType>
++              <xsd:sequence>
++                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
++              </xsd:sequence>
++              <xsd:attribute name="name" type="xsd:string" use="required" />
++            </xsd:complexType>
++          </xsd:element>
++        </xsd:choice>
++      </xsd:complexType>
++    </xsd:element>
++  </xsd:schema>
++  <resheader name="resmimetype">
++    <value>text/microsoft-resx</value>
++  </resheader>
++  <resheader name="version">
++    <value>2.0</value>
++  </resheader>
++  <resheader name="reader">
++    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
++  </resheader>
++  <resheader name="writer">
++    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
++  </resheader>
++</root>
+\ No newline at end of file
+diff --git a/VendorMaintenance/frmState.cs b/VendorMaintenance/frmState.cs
+new file mode 100644
+index 0000000..131199e
+--- /dev/null
++++ b/VendorMaintenance/frmState.cs
+@@ -0,0 +1,143 @@
++﻿using System;
++using System.Collections.Generic;
++using System.ComponentModel;
++using System.Data;
++using System.Data.Linq;
++using System.Drawing;
++using System.Linq;
++using System.Text;
++using System.Windows.Forms;
++
++namespace VendorMaintenance
++{
++    public partial class frmState : Form
++    {
++        public frmState()
++        {
++            InitializeComponent();
++        }
++
++        State selectedState;
++
++        private void btnGetState_Click(object sender, EventArgs e)
++        {
++            try
++            {
++                selectedState = (from state in DataContext.payables.States where state.StateCode == txtStateCode.Text select state).Single();
++                this.DisplayStateCode();
++            }
++            catch (InvalidOperationException)
++            {
++                MessageBox.Show("No State found with this Code " +
++                    "Please try again.", "this state Not Found");
++                this.ClearControls();
++                txtStateCode.Focus();
++            }
++            catch (Exception ex)
++            {
++                MessageBox.Show(ex.Message, ex.GetType().ToString());
++            }
++        }
++
++        private void DisplayStateCode()
++        {
++            txtStateCode.Text = selectedState.StateCode;
++            txtStateName.Text = selectedState.StateName;
++            txtFirstZip.Text = selectedState.FirstZipCode.ToString();
++            txtLastZip.Text = selectedState.LastZipCode.ToString();
++            btnModifyState.Enabled = true;
++            btnDeleteState.Enabled = true;          
++        }
++
++        private void ClearControls()
++        {
++            txtStateCode.Text = "";
++            txtStateName.Text = "";
++            txtFirstZip.Text = "";
++            txtLastZip.Text = "";
++            btnModifyState.Enabled = false;
++            btnDeleteState.Enabled = false;
++        }
++
++        private void btnAddState_Click(object sender, EventArgs e)
++        {
++            frmAddModifyState addModifyStateForm = new frmAddModifyState();
++            addModifyStateForm.addState = true;
++            DialogResult result = addModifyStateForm.ShowDialog();
++            if (result == DialogResult.OK)
++            {
++                selectedState = addModifyStateForm.state;
++                txtStateCode.Text = selectedState.StateCode.ToString();
++                this.DisplayState();
++            }
++        }
++
++        private void btnModifyState_Click(object sender, EventArgs e)
++        {
++            frmAddModifyState addModifyStateForm = new frmAddModifyState();
++            addModifyStateForm.addState = false;
++            addModifyStateForm.state = selectedState;
++            DialogResult result = addModifyStateForm.ShowDialog();
++            if (result == DialogResult.OK || result == DialogResult.Retry)
++            {
++                selectedState = addModifyStateForm.state;
++                this.DisplayState();
++            }
++            else if (result == DialogResult.Abort)
++            {
++                txtStateCode.Text = "";
++                this.ClearControls();
++            }
++        }
++
++        private void DisplayState()
++        {
++            txtStateCode.Text = selectedState.StateCode;
++            txtStateName.Text = selectedState.StateName;
++            txtFirstZip.Text = selectedState.FirstZipCode.ToString();
++            txtLastZip.Text = selectedState.LastZipCode.ToString();           
++            btnModifyState.Enabled = true;
++            btnDeleteState.Enabled = true;
++        }
++
++        private void btnDeleteState_Click(object sender, EventArgs e)
++        {
++            {
++                DialogResult result =
++                    MessageBox.Show("Delete " + selectedState.StateName + "?",
++                    "Confirm Delete", MessageBoxButtons.YesNo,
++                    MessageBoxIcon.Question);
++                if (result == DialogResult.Yes)
++                {
++                    try
++                    {
++                        DataContext.payables.States.DeleteOnSubmit(selectedState);
++                        DataContext.payables.SubmitChanges();
++                        txtStateCode.Text = "";
++                        this.ClearControls();
++                    }
++                    catch (ChangeConflictException)
++                    {
++                        DataContext.GetCurrentValues();
++                        MessageBox.Show("Another user has updated that state.",
++                            "Database Error");
++                        this.DisplayState();
++                    }
++                    catch (Exception ex)
++                    {
++                        MessageBox.Show(ex.Message, ex.GetType().ToString());
++                    }
++                }
++            }
++        }
++        
++        private void btnClear_Click(object sender, EventArgs e)
++        {
++            ClearControls();
++        }
++        private void btnExit_Click(object sender, EventArgs e)
++        {
++            this.Close();
++        }
++    }
++}
+diff --git a/VendorMaintenance/frmState.designer.cs b/VendorMaintenance/frmState.designer.cs
+new file mode 100644
+index 0000000..c9b1340
+--- /dev/null
++++ b/VendorMaintenance/frmState.designer.cs
+@@ -0,0 +1,215 @@
++﻿namespace VendorMaintenance
++{
++    partial class frmState
++    {
++        /// <summary>
++        /// Required designer variable.
++        /// </summary>
++        private System.ComponentModel.IContainer components = null;
++
++        /// <summary>
++        /// Clean up any resources being used.
++        /// </summary>
++        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
++        protected override void Dispose(bool disposing)
++        {
++            if (disposing && (components != null))
++            {
++                components.Dispose();
++            }
++            base.Dispose(disposing);
++        }
++
++        #region Windows Form Designer generated code
++
++        /// <summary>
++        /// Required method for Designer support - do not modify
++        /// the contents of this method with the code editor.
++        /// </summary>
++        private void InitializeComponent()
++        {
++            this.label1 = new System.Windows.Forms.Label();
++            this.txtStateCode = new System.Windows.Forms.TextBox();
++            this.btnGetState = new System.Windows.Forms.Button();
++            this.txtStateName = new System.Windows.Forms.TextBox();
++            this.label2 = new System.Windows.Forms.Label();
++            this.txtFirstZip = new System.Windows.Forms.TextBox();
++            this.label3 = new System.Windows.Forms.Label();
++            this.txtLastZip = new System.Windows.Forms.TextBox();
++            this.label4 = new System.Windows.Forms.Label();
++            this.btnAddState = new System.Windows.Forms.Button();
++            this.btnModifyState = new System.Windows.Forms.Button();
++            this.btnDeleteState = new System.Windows.Forms.Button();
++            this.btnClear = new System.Windows.Forms.Button();
++            this.btnExit = new System.Windows.Forms.Button();
++            this.SuspendLayout();
++            // 
++            // label1
++            // 
++            this.label1.AutoSize = true;
++            this.label1.Location = new System.Drawing.Point(12, 9);
++            this.label1.Name = "label1";
++            this.label1.Size = new System.Drawing.Size(60, 13);
++            this.label1.TabIndex = 0;
++            this.label1.Text = "State Code";
++            // 
++            // txtStateCode
++            // 
++            this.txtStateCode.Location = new System.Drawing.Point(78, 6);
++            this.txtStateCode.Name = "txtStateCode";
++            this.txtStateCode.Size = new System.Drawing.Size(100, 20);
++            this.txtStateCode.TabIndex = 1;
++            // 
++            // btnGetState
++            // 
++            this.btnGetState.Location = new System.Drawing.Point(184, 4);
++            this.btnGetState.Name = "btnGetState";
++            this.btnGetState.Size = new System.Drawing.Size(88, 23);
++            this.btnGetState.TabIndex = 2;
++            this.btnGetState.Text = "Get State Code";
++            this.btnGetState.UseVisualStyleBackColor = true;
++            this.btnGetState.Click += new System.EventHandler(this.btnGetState_Click);
++            // 
++            // txtStateName
++            // 
++            this.txtStateName.Location = new System.Drawing.Point(78, 32);
++            this.txtStateName.Name = "txtStateName";
++            this.txtStateName.Size = new System.Drawing.Size(194, 20);
++            this.txtStateName.TabIndex = 4;
++            // 
++            // label2
++            // 
++            this.label2.AutoSize = true;
++            this.label2.Location = new System.Drawing.Point(12, 35);
++            this.label2.Name = "label2";
++            this.label2.Size = new System.Drawing.Size(63, 13);
++            this.label2.TabIndex = 3;
++            this.label2.Text = "State Name";
++            // 
++            // txtFirstZip
++            // 
++            this.txtFirstZip.Location = new System.Drawing.Point(78, 58);
++            this.txtFirstZip.Name = "txtFirstZip";
++            this.txtFirstZip.Size = new System.Drawing.Size(194, 20);
++            this.txtFirstZip.TabIndex = 6;
++            // 
++            // label3
++            // 
++            this.label3.AutoSize = true;
++            this.label3.Location = new System.Drawing.Point(12, 61);
++            this.label3.Name = "label3";
++            this.label3.Size = new System.Drawing.Size(44, 13);
++            this.label3.TabIndex = 5;
++            this.label3.Text = "First Zip";
++            // 
++            // txtLastZip
++            // 
++            this.txtLastZip.Location = new System.Drawing.Point(78, 84);
++            this.txtLastZip.Name = "txtLastZip";
++            this.txtLastZip.Size = new System.Drawing.Size(194, 20);
++            this.txtLastZip.TabIndex = 8;
++            // 
++            // label4
++            // 
++            this.label4.AutoSize = true;
++            this.label4.Location = new System.Drawing.Point(12, 87);
++            this.label4.Name = "label4";
++            this.label4.Size = new System.Drawing.Size(45, 13);
++            this.label4.TabIndex = 7;
++            this.label4.Text = "Last Zip";
++            // 
++            // btnAddState
++            // 
++            this.btnAddState.Location = new System.Drawing.Point(12, 110);
++            this.btnAddState.Name = "btnAddState";
++            this.btnAddState.Size = new System.Drawing.Size(75, 23);
++            this.btnAddState.TabIndex = 9;
++            this.btnAddState.Text = "Add";
++            this.btnAddState.UseVisualStyleBackColor = true;
++            this.btnAddState.Click += new System.EventHandler(this.btnAddState_Click);
++            // 
++            // btnModifyState
++            // 
++            this.btnModifyState.Location = new System.Drawing.Point(93, 110);
++            this.btnModifyState.Name = "btnModifyState";
++            this.btnModifyState.Size = new System.Drawing.Size(75, 23);
++            this.btnModifyState.TabIndex = 10;
++            this.btnModifyState.Text = "Modify";
++            this.btnModifyState.UseVisualStyleBackColor = true;
++            this.btnModifyState.Click += new System.EventHandler(this.btnModifyState_Click);
++            // 
++            // btnDeleteState
++            // 
++            this.btnDeleteState.Enabled = false;
++            this.btnDeleteState.Location = new System.Drawing.Point(12, 139);
++            this.btnDeleteState.Name = "btnDeleteState";
++            this.btnDeleteState.Size = new System.Drawing.Size(75, 23);
++            this.btnDeleteState.TabIndex = 11;
++            this.btnDeleteState.Text = "Delete";
++            this.btnDeleteState.UseVisualStyleBackColor = true;
++            this.btnDeleteState.Click += new System.EventHandler(this.btnDeleteState_Click);
++            // 
++            // btnClear
++            // 
++            this.btnClear.Location = new System.Drawing.Point(93, 139);
++            this.btnClear.Name = "btnClear";
++            this.btnClear.Size = new System.Drawing.Size(75, 23);
++            this.btnClear.TabIndex = 12;
++            this.btnClear.Text = "Clear";
++            this.btnClear.UseVisualStyleBackColor = true;
++            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
++            // 
++            // btnExit
++            // 
++            this.btnExit.Location = new System.Drawing.Point(174, 110);
++            this.btnExit.Name = "btnExit";
++            this.btnExit.Size = new System.Drawing.Size(98, 52);
++            this.btnExit.TabIndex = 13;
++            this.btnExit.Text = "Exit";
++            this.btnExit.UseVisualStyleBackColor = true;
++            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
++            // 
++            // frmState
++            // 
++            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
++            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
++            this.ClientSize = new System.Drawing.Size(284, 173);
++            this.Controls.Add(this.btnExit);
++            this.Controls.Add(this.btnClear);
++            this.Controls.Add(this.btnDeleteState);
++            this.Controls.Add(this.btnModifyState);
++            this.Controls.Add(this.btnAddState);
++            this.Controls.Add(this.txtLastZip);
++            this.Controls.Add(this.label4);
++            this.Controls.Add(this.txtFirstZip);
++            this.Controls.Add(this.label3);
++            this.Controls.Add(this.txtStateName);
++            this.Controls.Add(this.label2);
++            this.Controls.Add(this.btnGetState);
++            this.Controls.Add(this.txtStateCode);
++            this.Controls.Add(this.label1);
++            this.Name = "frmState";
++            this.Text = "frmState";
++            this.ResumeLayout(false);
++            this.PerformLayout();
++
++        }
++
++        #endregion
++
++        private System.Windows.Forms.Label label1;
++        private System.Windows.Forms.TextBox txtStateCode;
++        private System.Windows.Forms.Button btnGetState;
++        private System.Windows.Forms.TextBox txtStateName;
++        private System.Windows.Forms.Label label2;
++        private System.Windows.Forms.TextBox txtFirstZip;
++        private System.Windows.Forms.Label label3;
++        private System.Windows.Forms.TextBox txtLastZip;
++        private System.Windows.Forms.Label label4;
++        private System.Windows.Forms.Button btnAddState;
++        private System.Windows.Forms.Button btnModifyState;
++        private System.Windows.Forms.Button btnDeleteState;
++        private System.Windows.Forms.Button btnClear;
++        private System.Windows.Forms.Button btnExit;
++    }
++}
+\ No newline at end of file
+diff --git a/VendorMaintenance/frmState.resx b/VendorMaintenance/frmState.resx
+new file mode 100644
+index 0000000..7080a7d
+--- /dev/null
++++ b/VendorMaintenance/frmState.resx
+@@ -0,0 +1,120 @@
++﻿<?xml version="1.0" encoding="utf-8"?>
++<root>
++  <!-- 
++    Microsoft ResX Schema 
++    
++    Version 2.0
++    
++    The primary goals of this format is to allow a simple XML format 
++    that is mostly human readable. The generation and parsing of the 
++    various data types are done through the TypeConverter classes 
++    associated with the data types.
++    
++    Example:
++    
++    ... ado.net/XML headers & schema ...
++    <resheader name="resmimetype">text/microsoft-resx</resheader>
++    <resheader name="version">2.0</resheader>
++    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
++    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
++    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
++    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
++    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
++        <value>[base64 mime encoded serialized .NET Framework object]</value>
++    </data>
++    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
++        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
++        <comment>This is a comment</comment>
++    </data>
++                
++    There are any number of "resheader" rows that contain simple 
++    name/value pairs.
++    
++    Each data row contains a name, and value. The row also contains a 
++    type or mimetype. Type corresponds to a .NET class that support 
++    text/value conversion through the TypeConverter architecture. 
++    Classes that don't support this are serialized and stored with the 
++    mimetype set.
++    
++    The mimetype is used for serialized objects, and tells the 
++    ResXResourceReader how to depersist the object. This is currently not 
++    extensible. For a given mimetype the value must be set accordingly:
++    
++    Note - application/x-microsoft.net.object.binary.base64 is the format 
++    that the ResXResourceWriter will generate, however the reader can 
++    read any of the formats listed below.
++    
++    mimetype: application/x-microsoft.net.object.binary.base64
++    value   : The object must be serialized with 
++            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
++            : and then encoded with base64 encoding.
++    
++    mimetype: application/x-microsoft.net.object.soap.base64
++    value   : The object must be serialized with 
++            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
++            : and then encoded with base64 encoding.
++
++    mimetype: application/x-microsoft.net.object.bytearray.base64
++    value   : The object must be serialized into a byte array 
++            : using a System.ComponentModel.TypeConverter
++            : and then encoded with base64 encoding.
++    -->
++  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
++    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
++    <xsd:element name="root" msdata:IsDataSet="true">
++      <xsd:complexType>
++        <xsd:choice maxOccurs="unbounded">
++          <xsd:element name="metadata">
++            <xsd:complexType>
++              <xsd:sequence>
++                <xsd:element name="value" type="xsd:string" minOccurs="0" />
++              </xsd:sequence>
++              <xsd:attribute name="name" use="required" type="xsd:string" />
++              <xsd:attribute name="type" type="xsd:string" />
++              <xsd:attribute name="mimetype" type="xsd:string" />
++              <xsd:attribute ref="xml:space" />
++            </xsd:complexType>
++          </xsd:element>
++          <xsd:element name="assembly">
++            <xsd:complexType>
++              <xsd:attribute name="alias" type="xsd:string" />
++              <xsd:attribute name="name" type="xsd:string" />
++            </xsd:complexType>
++          </xsd:element>
++          <xsd:element name="data">
++            <xsd:complexType>
++              <xsd:sequence>
++                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
++                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
++              </xsd:sequence>
++              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
++              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
++              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
++              <xsd:attribute ref="xml:space" />
++            </xsd:complexType>
++          </xsd:element>
++          <xsd:element name="resheader">
++            <xsd:complexType>
++              <xsd:sequence>
++                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
++              </xsd:sequence>
++              <xsd:attribute name="name" type="xsd:string" use="required" />
++            </xsd:complexType>
++          </xsd:element>
++        </xsd:choice>
++      </xsd:complexType>
++    </xsd:element>
++  </xsd:schema>
++  <resheader name="resmimetype">
++    <value>text/microsoft-resx</value>
++  </resheader>
++  <resheader name="version">
++    <value>2.0</value>
++  </resheader>
++  <resheader name="reader">
++    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
++  </resheader>
++  <resheader name="writer">
++    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
++  </resheader>
++</root>
+\ No newline at end of file
+-- 
+2.11.0.windows.1
+

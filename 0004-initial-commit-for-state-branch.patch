@@ -1,0 +1,69 @@
+From d4ccc4bf18c166811f2a6173879c529ca39e6bc4 Mon Sep 17 00:00:00 2001
+From: Jacob <jacob.thiele@student.tafesa.edu.au>
+Date: Fri, 7 Apr 2017 10:19:55 +0930
+Subject: [PATCH 4/4] initial commit for state branch
+
+---
+ VendorMaintenance/Program.cs               |  3 ++-
+ VendorMaintenance/VendorMaintenance.csproj | 18 ++++++++++++++++++
+ 2 files changed, 20 insertions(+), 1 deletion(-)
+
+diff --git a/VendorMaintenance/Program.cs b/VendorMaintenance/Program.cs
+index 727a00f..7dbea4a 100644
+--- a/VendorMaintenance/Program.cs
++++ b/VendorMaintenance/Program.cs
+@@ -15,7 +15,8 @@ namespace VendorMaintenance
+         {
+             Application.EnableVisualStyles();
+             Application.SetCompatibleTextRenderingDefault(false);
+-            Application.Run(new frmVendorMaintenance());
++            Application.Run(new frmState());
++            //Application.Run(new frmVendorMaintenance());
+         }
+     }
+ }
+diff --git a/VendorMaintenance/VendorMaintenance.csproj b/VendorMaintenance/VendorMaintenance.csproj
+index 5fba34e..3cb0e22 100644
+--- a/VendorMaintenance/VendorMaintenance.csproj
++++ b/VendorMaintenance/VendorMaintenance.csproj
+@@ -58,12 +58,24 @@
+   </ItemGroup>
+   <ItemGroup>
+     <Compile Include="DataContext.cs" />
++    <Compile Include="frmAddModifyState.cs">
++      <SubType>Form</SubType>
++    </Compile>
++    <Compile Include="frmAddModifyState.designer.cs">
++      <DependentUpon>frmAddModifyState.cs</DependentUpon>
++    </Compile>
+     <Compile Include="frmAddModifyVendor.cs">
+       <SubType>Form</SubType>
+     </Compile>
+     <Compile Include="frmAddModifyVendor.Designer.cs">
+       <DependentUpon>frmAddModifyVendor.cs</DependentUpon>
+     </Compile>
++    <Compile Include="frmState.cs">
++      <SubType>Form</SubType>
++    </Compile>
++    <Compile Include="frmState.designer.cs">
++      <DependentUpon>frmState.cs</DependentUpon>
++    </Compile>
+     <Compile Include="frmVendorMaintenance.cs">
+       <SubType>Form</SubType>
+     </Compile>
+@@ -83,6 +95,12 @@
+     <None Include="Payables.dbml.layout">
+       <DependentUpon>Payables.dbml</DependentUpon>
+     </None>
++    <EmbeddedResource Include="frmAddModifyState.resx">
++      <DependentUpon>frmAddModifyState.cs</DependentUpon>
++    </EmbeddedResource>
++    <EmbeddedResource Include="frmState.resx">
++      <DependentUpon>frmState.cs</DependentUpon>
++    </EmbeddedResource>
+     <EmbeddedResource Include="Properties\Resources.resx">
+       <Generator>ResXFileCodeGenerator</Generator>
+       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+-- 
+2.11.0.windows.1
+

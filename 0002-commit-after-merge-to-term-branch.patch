@@ -1,0 +1,880 @@
+From 6e2d7a566d6b0f34650d7b76df113b66aab60d98 Mon Sep 17 00:00:00 2001
+From: Eshmael Sevilla <sevie10@y7mail.com>
+Date: Mon, 3 Apr 2017 10:20:13 +0930
+Subject: [PATCH 2/4] commit after merge to term branch
+
+---
+ VendorMaintenance/frmAddModifyTerm.Designer.cs | 141 +++++++++++++++++
+ VendorMaintenance/frmAddModifyTerm.cs          |  85 ++++++++++
+ VendorMaintenance/frmAddModifyTerm.resx        | 120 ++++++++++++++
+ VendorMaintenance/frmTerm.Designer.cs          | 207 +++++++++++++++++++++++++
+ VendorMaintenance/frmTerm.cs                   | 144 +++++++++++++++++
+ VendorMaintenance/frmTerm.resx                 | 120 ++++++++++++++
+ 6 files changed, 817 insertions(+)
+ create mode 100644 VendorMaintenance/frmAddModifyTerm.Designer.cs
+ create mode 100644 VendorMaintenance/frmAddModifyTerm.cs
+ create mode 100644 VendorMaintenance/frmAddModifyTerm.resx
+ create mode 100644 VendorMaintenance/frmTerm.Designer.cs
+ create mode 100644 VendorMaintenance/frmTerm.cs
+ create mode 100644 VendorMaintenance/frmTerm.resx
+
+diff --git a/VendorMaintenance/frmAddModifyTerm.Designer.cs b/VendorMaintenance/frmAddModifyTerm.Designer.cs
+new file mode 100644
+index 0000000..76281d8
+--- /dev/null
++++ b/VendorMaintenance/frmAddModifyTerm.Designer.cs
+@@ -0,0 +1,141 @@
++﻿namespace VendorMaintenance
++{
++    partial class frmAddModifyTerm
++    {
++        /// <summary>
++        /// Required designer variable.
++        /// </summary>
++        private System.ComponentModel.IContainer components = null;
++
++        /// <summary>
++        /// Clean up any resources being used.
++        /// </summary>
++        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
++        protected override void Dispose(bool disposing)
++        {
++            if (disposing && (components != null))
++            {
++                components.Dispose();
++            }
++            base.Dispose(disposing);
++        }
++
++        #region Windows Form Designer generated code
++
++        /// <summary>
++        /// Required method for Designer support - do not modify
++        /// the contents of this method with the code editor.
++        /// </summary>
++        private void InitializeComponent()
++        {
++            this.acceptButton = new System.Windows.Forms.Button();
++            this.cancelButton = new System.Windows.Forms.Button();
++            this.termLabel = new System.Windows.Forms.Label();
++            this.descLabel = new System.Windows.Forms.Label();
++            this.dueLabel = new System.Windows.Forms.Label();
++            this.termTextBox = new System.Windows.Forms.TextBox();
++            this.descTextBox = new System.Windows.Forms.TextBox();
++            this.dueTextBox = new System.Windows.Forms.TextBox();
++            this.SuspendLayout();
++            // 
++            // acceptButton
++            // 
++            this.acceptButton.Location = new System.Drawing.Point(60, 238);
++            this.acceptButton.Name = "acceptButton";
++            this.acceptButton.Size = new System.Drawing.Size(100, 32);
++            this.acceptButton.TabIndex = 0;
++            this.acceptButton.Text = "Accept";
++            this.acceptButton.UseVisualStyleBackColor = true;
++            this.acceptButton.Click += new System.EventHandler(this.acceptButton_Click);
++            // 
++            // cancelButton
++            // 
++            this.cancelButton.Location = new System.Drawing.Point(384, 238);
++            this.cancelButton.Name = "cancelButton";
++            this.cancelButton.Size = new System.Drawing.Size(87, 32);
++            this.cancelButton.TabIndex = 1;
++            this.cancelButton.Text = "Cancel";
++            this.cancelButton.UseVisualStyleBackColor = true;
++            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
++            // 
++            // termLabel
++            // 
++            this.termLabel.AutoSize = true;
++            this.termLabel.Location = new System.Drawing.Point(56, 47);
++            this.termLabel.Name = "termLabel";
++            this.termLabel.Size = new System.Drawing.Size(70, 20);
++            this.termLabel.TabIndex = 2;
++            this.termLabel.Text = "Term ID:";
++            // 
++            // descLabel
++            // 
++            this.descLabel.AutoSize = true;
++            this.descLabel.Location = new System.Drawing.Point(56, 111);
++            this.descLabel.Name = "descLabel";
++            this.descLabel.Size = new System.Drawing.Size(93, 20);
++            this.descLabel.TabIndex = 3;
++            this.descLabel.Text = "Description:";
++            // 
++            // dueLabel
++            // 
++            this.dueLabel.AutoSize = true;
++            this.dueLabel.Location = new System.Drawing.Point(56, 176);
++            this.dueLabel.Name = "dueLabel";
++            this.dueLabel.Size = new System.Drawing.Size(83, 20);
++            this.dueLabel.TabIndex = 4;
++            this.dueLabel.Text = "Due Days:";
++            // 
++            // termTextBox
++            // 
++            this.termTextBox.Location = new System.Drawing.Point(265, 47);
++            this.termTextBox.Name = "termTextBox";
++            this.termTextBox.Size = new System.Drawing.Size(100, 26);
++            this.termTextBox.TabIndex = 5;
++            // 
++            // descTextBox
++            // 
++            this.descTextBox.Location = new System.Drawing.Point(265, 104);
++            this.descTextBox.Name = "descTextBox";
++            this.descTextBox.Size = new System.Drawing.Size(166, 26);
++            this.descTextBox.TabIndex = 6;
++            // 
++            // dueTextBox
++            // 
++            this.dueTextBox.Location = new System.Drawing.Point(265, 169);
++            this.dueTextBox.Name = "dueTextBox";
++            this.dueTextBox.Size = new System.Drawing.Size(100, 26);
++            this.dueTextBox.TabIndex = 7;
++            // 
++            // frmAddModifyTerm
++            // 
++            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
++            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
++            this.ClientSize = new System.Drawing.Size(543, 324);
++            this.Controls.Add(this.dueTextBox);
++            this.Controls.Add(this.descTextBox);
++            this.Controls.Add(this.termTextBox);
++            this.Controls.Add(this.dueLabel);
++            this.Controls.Add(this.descLabel);
++            this.Controls.Add(this.termLabel);
++            this.Controls.Add(this.cancelButton);
++            this.Controls.Add(this.acceptButton);
++            this.Name = "frmAddModifyTerm";
++            this.Text = "Add/Modify Terms";
++            this.Load += new System.EventHandler(this.frmAddModifyTerm_Load);
++            this.ResumeLayout(false);
++            this.PerformLayout();
++
++        }
++
++        #endregion
++
++        private System.Windows.Forms.Button acceptButton;
++        private System.Windows.Forms.Button cancelButton;
++        private System.Windows.Forms.Label termLabel;
++        private System.Windows.Forms.Label descLabel;
++        private System.Windows.Forms.Label dueLabel;
++        private System.Windows.Forms.TextBox termTextBox;
++        private System.Windows.Forms.TextBox descTextBox;
++        private System.Windows.Forms.TextBox dueTextBox;
++    }
++}
+\ No newline at end of file
+diff --git a/VendorMaintenance/frmAddModifyTerm.cs b/VendorMaintenance/frmAddModifyTerm.cs
+new file mode 100644
+index 0000000..f5b3200
+--- /dev/null
++++ b/VendorMaintenance/frmAddModifyTerm.cs
+@@ -0,0 +1,85 @@
++﻿using System;
++using System.Collections.Generic;
++using System.ComponentModel;
++using System.Data;
++using System.Drawing;
++using System.Linq;
++using System.Text;
++using System.Windows.Forms;
++
++namespace VendorMaintenance
++{
++    public partial class frmAddModifyTerm : Form
++    {
++        public frmAddModifyTerm()
++        {
++            InitializeComponent();
++        }
++        public bool addTerm;
++        public Term term;
++
++        //if not adding a Term display the Term data to screen
++        private void frmAddModifyTerm_Load(object sender, EventArgs e)
++        {
++            if (addTerm != true)
++            {
++                this.DisplayTermData();
++            }
++        }
++
++        private void DisplayTermData()
++        {
++            termTextBox.Text = term.TermsID.ToString();
++            descTextBox.Text = term.Description;
++            dueTextBox.Text = term.DueDays.ToString();
++        }
++//Check whether the user want to add or modify function, the corresponding add/modify
++        //action to the database is carried out
++        private void acceptButton_Click(object sender, EventArgs e)
++        {
++            if (addTerm)
++            {
++                term = new Term();
++                this.PutTermData(term);
++                DataContext.payables.Terms.InsertOnSubmit(term);
++
++                try
++                {
++                    DataContext.payables.SubmitChanges();
++                    this.DialogResult = DialogResult.OK;
++                    MessageBox.Show("Term " + Convert.ToString(term.TermsID) +
++                        " has been added to the Terms table");
++                }
++                catch (Exception ex)
++                {
++                    MessageBox.Show(ex.Message, ex.GetType().ToString());
++                }
++            }
++            else
++            {
++                this.PutTermData(term);
++                try
++                {
++                    DataContext.payables.SubmitChanges();
++                    this.DialogResult = DialogResult.OK;
++                }
++                catch (Exception ex)
++                {
++                    MessageBox.Show(ex.Message, ex.GetType().ToString());
++                }
++            }
++        }
++//assign Term properties through this method
++        private void PutTermData(Term term)
++        {
++            term.TermsID = Convert.ToInt32(termTextBox.Text);
++            term.Description = descTextBox.Text;
++            term.DueDays = Convert.ToInt16(dueTextBox.Text);
++        }
++
++        private void cancelButton_Click(object sender, EventArgs e)
++        {
++            this.Hide();
++        }
++    }
++}
+diff --git a/VendorMaintenance/frmAddModifyTerm.resx b/VendorMaintenance/frmAddModifyTerm.resx
+new file mode 100644
+index 0000000..7080a7d
+--- /dev/null
++++ b/VendorMaintenance/frmAddModifyTerm.resx
+@@ -0,0 +1,120 @@
++﻿<?xml version="1.0" encoding="utf-8"?>
++<root>
++  <!-- 
++    Microsoft ResX Schema 
++    
++    Version 2.0
++    
++    The primary goals of this format is to allow a simple XML format 
++    that is mostly human readable. The generation and parsing of the 
++    various data types are done through the TypeConverter classes 
++    associated with the data types.
++    
++    Example:
++    
++    ... ado.net/XML headers & schema ...
++    <resheader name="resmimetype">text/microsoft-resx</resheader>
++    <resheader name="version">2.0</resheader>
++    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
++    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
++    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
++    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
++    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
++        <value>[base64 mime encoded serialized .NET Framework object]</value>
++    </data>
++    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
++        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
++        <comment>This is a comment</comment>
++    </data>
++                
++    There are any number of "resheader" rows that contain simple 
++    name/value pairs.
++    
++    Each data row contains a name, and value. The row also contains a 
++    type or mimetype. Type corresponds to a .NET class that support 
++    text/value conversion through the TypeConverter architecture. 
++    Classes that don't support this are serialized and stored with the 
++    mimetype set.
++    
++    The mimetype is used for serialized objects, and tells the 
++    ResXResourceReader how to depersist the object. This is currently not 
++    extensible. For a given mimetype the value must be set accordingly:
++    
++    Note - application/x-microsoft.net.object.binary.base64 is the format 
++    that the ResXResourceWriter will generate, however the reader can 
++    read any of the formats listed below.
++    
++    mimetype: application/x-microsoft.net.object.binary.base64
++    value   : The object must be serialized with 
++            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
++            : and then encoded with base64 encoding.
++    
++    mimetype: application/x-microsoft.net.object.soap.base64
++    value   : The object must be serialized with 
++            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
++            : and then encoded with base64 encoding.
++
++    mimetype: application/x-microsoft.net.object.bytearray.base64
++    value   : The object must be serialized into a byte array 
++            : using a System.ComponentModel.TypeConverter
++            : and then encoded with base64 encoding.
++    -->
++  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
++    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
++    <xsd:element name="root" msdata:IsDataSet="true">
++      <xsd:complexType>
++        <xsd:choice maxOccurs="unbounded">
++          <xsd:element name="metadata">
++            <xsd:complexType>
++              <xsd:sequence>
++                <xsd:element name="value" type="xsd:string" minOccurs="0" />
++              </xsd:sequence>
++              <xsd:attribute name="name" use="required" type="xsd:string" />
++              <xsd:attribute name="type" type="xsd:string" />
++              <xsd:attribute name="mimetype" type="xsd:string" />
++              <xsd:attribute ref="xml:space" />
++            </xsd:complexType>
++          </xsd:element>
++          <xsd:element name="assembly">
++            <xsd:complexType>
++              <xsd:attribute name="alias" type="xsd:string" />
++              <xsd:attribute name="name" type="xsd:string" />
++            </xsd:complexType>
++          </xsd:element>
++          <xsd:element name="data">
++            <xsd:complexType>
++              <xsd:sequence>
++                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
++                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
++              </xsd:sequence>
++              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
++              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
++              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
++              <xsd:attribute ref="xml:space" />
++            </xsd:complexType>
++          </xsd:element>
++          <xsd:element name="resheader">
++            <xsd:complexType>
++              <xsd:sequence>
++                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
++              </xsd:sequence>
++              <xsd:attribute name="name" type="xsd:string" use="required" />
++            </xsd:complexType>
++          </xsd:element>
++        </xsd:choice>
++      </xsd:complexType>
++    </xsd:element>
++  </xsd:schema>
++  <resheader name="resmimetype">
++    <value>text/microsoft-resx</value>
++  </resheader>
++  <resheader name="version">
++    <value>2.0</value>
++  </resheader>
++  <resheader name="reader">
++    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
++  </resheader>
++  <resheader name="writer">
++    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
++  </resheader>
++</root>
+\ No newline at end of file
+diff --git a/VendorMaintenance/frmTerm.Designer.cs b/VendorMaintenance/frmTerm.Designer.cs
+new file mode 100644
+index 0000000..0402574
+--- /dev/null
++++ b/VendorMaintenance/frmTerm.Designer.cs
+@@ -0,0 +1,207 @@
++﻿namespace VendorMaintenance
++{
++    partial class frmTerm
++    {
++        /// <summary>
++        /// Required designer variable.
++        /// </summary>
++        private System.ComponentModel.IContainer components = null;
++
++        /// <summary>
++        /// Clean up any resources being used.
++        /// </summary>
++        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
++        protected override void Dispose(bool disposing)
++        {
++            if (disposing && (components != null))
++            {
++                components.Dispose();
++            }
++            base.Dispose(disposing);
++        }
++
++        #region Windows Form Designer generated code
++
++        /// <summary>
++        /// Required method for Designer support - do not modify
++        /// the contents of this method with the code editor.
++        /// </summary>
++        private void InitializeComponent()
++        {
++            this.termLabel = new System.Windows.Forms.Label();
++            this.termTextBox = new System.Windows.Forms.TextBox();
++            this.descLabel = new System.Windows.Forms.Label();
++            this.descTextBox = new System.Windows.Forms.TextBox();
++            this.dueDaysLabel = new System.Windows.Forms.Label();
++            this.dueDaysTextBox = new System.Windows.Forms.TextBox();
++            this.getTermButton = new System.Windows.Forms.Button();
++            this.addButton = new System.Windows.Forms.Button();
++            this.modifyButton = new System.Windows.Forms.Button();
++            this.deleteButton = new System.Windows.Forms.Button();
++            this.exitButton = new System.Windows.Forms.Button();
++            this.clearButton = new System.Windows.Forms.Button();
++            this.SuspendLayout();
++            // 
++            // termLabel
++            // 
++            this.termLabel.AutoSize = true;
++            this.termLabel.Location = new System.Drawing.Point(18, 94);
++            this.termLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
++            this.termLabel.Name = "termLabel";
++            this.termLabel.Size = new System.Drawing.Size(70, 20);
++            this.termLabel.TabIndex = 0;
++            this.termLabel.Text = "Term ID:";
++            // 
++            // termTextBox
++            // 
++            this.termTextBox.Location = new System.Drawing.Point(162, 83);
++            this.termTextBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
++            this.termTextBox.Name = "termTextBox";
++            this.termTextBox.Size = new System.Drawing.Size(148, 26);
++            this.termTextBox.TabIndex = 1;
++            this.termTextBox.Tag = "Term ID";
++            // 
++            // descLabel
++            // 
++            this.descLabel.AutoSize = true;
++            this.descLabel.Location = new System.Drawing.Point(18, 142);
++            this.descLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
++            this.descLabel.Name = "descLabel";
++            this.descLabel.Size = new System.Drawing.Size(93, 20);
++            this.descLabel.TabIndex = 2;
++            this.descLabel.Text = "Description:";
++            // 
++            // descTextBox
++            // 
++            this.descTextBox.Location = new System.Drawing.Point(162, 131);
++            this.descTextBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
++            this.descTextBox.Name = "descTextBox";
++            this.descTextBox.ReadOnly = true;
++            this.descTextBox.Size = new System.Drawing.Size(148, 26);
++            this.descTextBox.TabIndex = 3;
++            // 
++            // dueDaysLabel
++            // 
++            this.dueDaysLabel.AutoSize = true;
++            this.dueDaysLabel.Location = new System.Drawing.Point(18, 191);
++            this.dueDaysLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
++            this.dueDaysLabel.Name = "dueDaysLabel";
++            this.dueDaysLabel.Size = new System.Drawing.Size(83, 20);
++            this.dueDaysLabel.TabIndex = 4;
++            this.dueDaysLabel.Text = "Due Days:";
++            // 
++            // dueDaysTextBox
++            // 
++            this.dueDaysTextBox.Location = new System.Drawing.Point(162, 191);
++            this.dueDaysTextBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
++            this.dueDaysTextBox.Name = "dueDaysTextBox";
++            this.dueDaysTextBox.ReadOnly = true;
++            this.dueDaysTextBox.Size = new System.Drawing.Size(148, 26);
++            this.dueDaysTextBox.TabIndex = 5;
++            // 
++            // getTermButton
++            // 
++            this.getTermButton.Location = new System.Drawing.Point(368, 78);
++            this.getTermButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
++            this.getTermButton.Name = "getTermButton";
++            this.getTermButton.Size = new System.Drawing.Size(112, 35);
++            this.getTermButton.TabIndex = 6;
++            this.getTermButton.Text = "Get Term";
++            this.getTermButton.UseVisualStyleBackColor = true;
++            this.getTermButton.Click += new System.EventHandler(this.getTermButton_Click);
++            // 
++            // addButton
++            // 
++            this.addButton.Location = new System.Drawing.Point(-1, 302);
++            this.addButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
++            this.addButton.Name = "addButton";
++            this.addButton.Size = new System.Drawing.Size(74, 35);
++            this.addButton.TabIndex = 7;
++            this.addButton.Text = "Add";
++            this.addButton.UseVisualStyleBackColor = true;
++            this.addButton.Click += new System.EventHandler(this.addButton_Click);
++            // 
++            // modifyButton
++            // 
++            this.modifyButton.Enabled = false;
++            this.modifyButton.Location = new System.Drawing.Point(95, 302);
++            this.modifyButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
++            this.modifyButton.Name = "modifyButton";
++            this.modifyButton.Size = new System.Drawing.Size(76, 35);
++            this.modifyButton.TabIndex = 8;
++            this.modifyButton.Text = "Modify";
++            this.modifyButton.UseVisualStyleBackColor = true;
++            this.modifyButton.Click += new System.EventHandler(this.modifyButton_Click);
++            // 
++            // deleteButton
++            // 
++            this.deleteButton.Enabled = false;
++            this.deleteButton.Location = new System.Drawing.Point(198, 302);
++            this.deleteButton.Name = "deleteButton";
++            this.deleteButton.Size = new System.Drawing.Size(84, 35);
++            this.deleteButton.TabIndex = 9;
++            this.deleteButton.Text = "Delete";
++            this.deleteButton.UseVisualStyleBackColor = true;
++            this.deleteButton.Click += new System.EventHandler(this.deleteButton_Click);
++            // 
++            // exitButton
++            // 
++            this.exitButton.Location = new System.Drawing.Point(423, 302);
++            this.exitButton.Name = "exitButton";
++            this.exitButton.Size = new System.Drawing.Size(81, 35);
++            this.exitButton.TabIndex = 10;
++            this.exitButton.Text = "Exit";
++            this.exitButton.UseVisualStyleBackColor = true;
++            this.exitButton.Click += new System.EventHandler(this.exitButton_Click);
++            // 
++            // clearButton
++            // 
++            this.clearButton.Location = new System.Drawing.Point(315, 302);
++            this.clearButton.Name = "clearButton";
++            this.clearButton.Size = new System.Drawing.Size(75, 35);
++            this.clearButton.TabIndex = 11;
++            this.clearButton.Text = "Clear";
++            this.clearButton.UseVisualStyleBackColor = true;
++            this.clearButton.Click += new System.EventHandler(this.clearButton_Click);
++            // 
++            // frmTerm
++            // 
++            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
++            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
++            this.ClientSize = new System.Drawing.Size(516, 402);
++            this.Controls.Add(this.clearButton);
++            this.Controls.Add(this.exitButton);
++            this.Controls.Add(this.deleteButton);
++            this.Controls.Add(this.modifyButton);
++            this.Controls.Add(this.addButton);
++            this.Controls.Add(this.getTermButton);
++            this.Controls.Add(this.dueDaysTextBox);
++            this.Controls.Add(this.dueDaysLabel);
++            this.Controls.Add(this.descTextBox);
++            this.Controls.Add(this.descLabel);
++            this.Controls.Add(this.termTextBox);
++            this.Controls.Add(this.termLabel);
++            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
++            this.Name = "frmTerm";
++            this.Text = "frmTerm";
++            this.ResumeLayout(false);
++            this.PerformLayout();
++
++        }
++
++        #endregion
++
++        private System.Windows.Forms.Label termLabel;
++        private System.Windows.Forms.TextBox termTextBox;
++        private System.Windows.Forms.Label descLabel;
++        private System.Windows.Forms.TextBox descTextBox;
++        private System.Windows.Forms.Label dueDaysLabel;
++        private System.Windows.Forms.TextBox dueDaysTextBox;
++        private System.Windows.Forms.Button getTermButton;
++        private System.Windows.Forms.Button addButton;
++        private System.Windows.Forms.Button modifyButton;
++        private System.Windows.Forms.Button deleteButton;
++        private System.Windows.Forms.Button exitButton;
++        private System.Windows.Forms.Button clearButton;
++    }
++}
+\ No newline at end of file
+diff --git a/VendorMaintenance/frmTerm.cs b/VendorMaintenance/frmTerm.cs
+new file mode 100644
+index 0000000..bf12801
+--- /dev/null
++++ b/VendorMaintenance/frmTerm.cs
+@@ -0,0 +1,144 @@
++﻿using System;
++using System.Collections.Generic;
++using System.ComponentModel;
++using System.Data;
++using System.Drawing;
++using System.Linq;
++using System.Text;
++using System.Windows.Forms;
++using System.Data.Linq;
++
++namespace VendorMaintenance
++{
++    public partial class frmTerm : Form
++    {
++        public frmTerm()
++        {
++            InitializeComponent();
++        }
++
++        Term selectedTerm;
++        //Get Term from table
++        private void getTermButton_Click(object sender, EventArgs e)
++        {
++            if (Validator.IsPresent(termTextBox) &&
++                Validator.IsInt32(termTextBox))
++            {
++                try
++                {
++                    selectedTerm =
++                        (from term in DataContext.payables.Terms
++                         where term.TermsID == Convert.ToInt32(termTextBox.Text)
++                         select term).Single();
++                    this.DisplayTerm();
++                }
++                catch (InvalidOperationException)
++                {
++                    MessageBox.Show("No term found with this ID. " +
++                        "Please try again.", "Terms Not Found");
++                    termTextBox.Text ="";
++                    termTextBox.Focus();
++                }
++                catch (Exception ex)
++                {
++                    MessageBox.Show(ex.Message, ex.GetType().ToString());
++                }
++            }
++        }
++
++        private void DisplayTerm()
++        {
++            descTextBox.Text = selectedTerm.Description;
++            dueDaysTextBox.Text = selectedTerm.DueDays.ToString();
++            modifyButton.Enabled = true;
++            deleteButton.Enabled = true;
++        }
++
++        private void ClearControls()
++        {
++            termTextBox.Text = "";
++            descTextBox.Text = "";
++            dueDaysTextBox.Text = "";
++            modifyButton.Enabled = false;
++            deleteButton.Enabled = false;
++        }
++
++        //Codes for the add button which is to display the frmAddModifyTerm.cs form
++        private void addButton_Click(object sender, EventArgs e)
++        {
++            //Generate a new form instance
++            frmAddModifyTerm addModifyTermForm = new frmAddModifyTerm();
++           
++            //assign the addTerm global boolean to be true
++            addModifyTermForm.addTerm = true;
++
++            DialogResult result = addModifyTermForm.ShowDialog();
++            if (result == DialogResult.OK)
++            {
++                selectedTerm = addModifyTermForm.term;
++                termTextBox.Text = selectedTerm.TermsID.ToString();
++                this.DisplayTerm();
++            }
++        }
++        //Codes for the modify button which is to display the frmAddModifyTerm.cs form
++        private void modifyButton_Click(object sender, EventArgs e)
++        {
++            //Generate a new form instance
++            frmAddModifyTerm addModifyTermForm = new frmAddModifyTerm();
++            addModifyTermForm.addTerm = false;
++            addModifyTermForm.term = selectedTerm;
++            DialogResult result = addModifyTermForm.ShowDialog();
++            if (result == DialogResult.OK || result == DialogResult.Retry)
++            {
++                selectedTerm = addModifyTermForm.term;
++                this.DisplayTerm();
++            }
++            else if (result == DialogResult.Abort)
++            {
++                termTextBox.Text = "";
++                this.ClearControls();
++            }
++        }
++        //merit component: delete data
++        private void deleteButton_Click(object sender, EventArgs e)
++        {
++            DialogResult result =
++                MessageBox.Show("Delete " + selectedTerm.TermsID + "?",
++                "Confirm Delete", MessageBoxButtons.YesNo,
++                MessageBoxIcon.Question);
++            if (result == DialogResult.Yes)
++            {
++                try
++                {
++                    DataContext.payables.Terms.DeleteOnSubmit(selectedTerm);
++                    DataContext.payables.SubmitChanges();
++                    termTextBox.Text = "";
++                    this.ClearControls();
++                }
++                catch (ChangeConflictException)
++                {
++                    DataContext.GetCurrentValues();
++                    MessageBox.Show("Another user has updated that term.",
++                        "Database Error");
++                    this.DisplayTerm();
++                }
++                catch (Exception ex)
++                {
++                    MessageBox.Show(ex.Message, ex.GetType().ToString());
++                }
++            }
++        }
++        //exit program
++        private void exitButton_Click(object sender, EventArgs e)
++        {
++            this.Close();
++        }
++        //clear data on screen
++        private void clearButton_Click(object sender, EventArgs e)
++        {
++            termTextBox.Text = "";
++            descTextBox.Text = "";
++            dueDaysTextBox.Text = "";
++        }
++    }
++}
+diff --git a/VendorMaintenance/frmTerm.resx b/VendorMaintenance/frmTerm.resx
+new file mode 100644
+index 0000000..7080a7d
+--- /dev/null
++++ b/VendorMaintenance/frmTerm.resx
+@@ -0,0 +1,120 @@
++﻿<?xml version="1.0" encoding="utf-8"?>
++<root>
++  <!-- 
++    Microsoft ResX Schema 
++    
++    Version 2.0
++    
++    The primary goals of this format is to allow a simple XML format 
++    that is mostly human readable. The generation and parsing of the 
++    various data types are done through the TypeConverter classes 
++    associated with the data types.
++    
++    Example:
++    
++    ... ado.net/XML headers & schema ...
++    <resheader name="resmimetype">text/microsoft-resx</resheader>
++    <resheader name="version">2.0</resheader>
++    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
++    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
++    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
++    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
++    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
++        <value>[base64 mime encoded serialized .NET Framework object]</value>
++    </data>
++    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
++        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
++        <comment>This is a comment</comment>
++    </data>
++                
++    There are any number of "resheader" rows that contain simple 
++    name/value pairs.
++    
++    Each data row contains a name, and value. The row also contains a 
++    type or mimetype. Type corresponds to a .NET class that support 
++    text/value conversion through the TypeConverter architecture. 
++    Classes that don't support this are serialized and stored with the 
++    mimetype set.
++    
++    The mimetype is used for serialized objects, and tells the 
++    ResXResourceReader how to depersist the object. This is currently not 
++    extensible. For a given mimetype the value must be set accordingly:
++    
++    Note - application/x-microsoft.net.object.binary.base64 is the format 
++    that the ResXResourceWriter will generate, however the reader can 
++    read any of the formats listed below.
++    
++    mimetype: application/x-microsoft.net.object.binary.base64
++    value   : The object must be serialized with 
++            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
++            : and then encoded with base64 encoding.
++    
++    mimetype: application/x-microsoft.net.object.soap.base64
++    value   : The object must be serialized with 
++            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
++            : and then encoded with base64 encoding.
++
++    mimetype: application/x-microsoft.net.object.bytearray.base64
++    value   : The object must be serialized into a byte array 
++            : using a System.ComponentModel.TypeConverter
++            : and then encoded with base64 encoding.
++    -->
++  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
++    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
++    <xsd:element name="root" msdata:IsDataSet="true">
++      <xsd:complexType>
++        <xsd:choice maxOccurs="unbounded">
++          <xsd:element name="metadata">
++            <xsd:complexType>
++              <xsd:sequence>
++                <xsd:element name="value" type="xsd:string" minOccurs="0" />
++              </xsd:sequence>
++              <xsd:attribute name="name" use="required" type="xsd:string" />
++              <xsd:attribute name="type" type="xsd:string" />
++              <xsd:attribute name="mimetype" type="xsd:string" />
++              <xsd:attribute ref="xml:space" />
++            </xsd:complexType>
++          </xsd:element>
++          <xsd:element name="assembly">
++            <xsd:complexType>
++              <xsd:attribute name="alias" type="xsd:string" />
++              <xsd:attribute name="name" type="xsd:string" />
++            </xsd:complexType>
++          </xsd:element>
++          <xsd:element name="data">
++            <xsd:complexType>
++              <xsd:sequence>
++                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
++                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
++              </xsd:sequence>
++              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
++              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
++              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
++              <xsd:attribute ref="xml:space" />
++            </xsd:complexType>
++          </xsd:element>
++          <xsd:element name="resheader">
++            <xsd:complexType>
++              <xsd:sequence>
++                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
++              </xsd:sequence>
++              <xsd:attribute name="name" type="xsd:string" use="required" />
++            </xsd:complexType>
++          </xsd:element>
++        </xsd:choice>
++      </xsd:complexType>
++    </xsd:element>
++  </xsd:schema>
++  <resheader name="resmimetype">
++    <value>text/microsoft-resx</value>
++  </resheader>
++  <resheader name="version">
++    <value>2.0</value>
++  </resheader>
++  <resheader name="reader">
++    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
++  </resheader>
++  <resheader name="writer">
++    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
++  </resheader>
++</root>
+\ No newline at end of file
+-- 
+2.11.0.windows.1
+

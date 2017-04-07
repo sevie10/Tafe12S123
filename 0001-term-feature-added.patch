@@ -1,0 +1,68 @@
+From 6a82a613331da91022b64b2d0ad222b2e44f9dac Mon Sep 17 00:00:00 2001
+From: Eshmael Sevilla <sevie10@y7mail.com>
+Date: Fri, 31 Mar 2017 16:28:15 +1030
+Subject: [PATCH 1/4] term feature added
+
+---
+ VendorMaintenance/Program.cs               |  2 +-
+ VendorMaintenance/VendorMaintenance.csproj | 18 ++++++++++++++++++
+ 2 files changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/VendorMaintenance/Program.cs b/VendorMaintenance/Program.cs
+index 727a00f..02aea13 100644
+--- a/VendorMaintenance/Program.cs
++++ b/VendorMaintenance/Program.cs
+@@ -15,7 +15,7 @@ namespace VendorMaintenance
+         {
+             Application.EnableVisualStyles();
+             Application.SetCompatibleTextRenderingDefault(false);
+-            Application.Run(new frmVendorMaintenance());
++            Application.Run(new frmTerm());
+         }
+     }
+ }
+diff --git a/VendorMaintenance/VendorMaintenance.csproj b/VendorMaintenance/VendorMaintenance.csproj
+index 5fba34e..bbf4a03 100644
+--- a/VendorMaintenance/VendorMaintenance.csproj
++++ b/VendorMaintenance/VendorMaintenance.csproj
+@@ -58,12 +58,24 @@
+   </ItemGroup>
+   <ItemGroup>
+     <Compile Include="DataContext.cs" />
++    <Compile Include="frmAddModifyTerm.cs">
++      <SubType>Form</SubType>
++    </Compile>
++    <Compile Include="frmAddModifyTerm.Designer.cs">
++      <DependentUpon>frmAddModifyTerm.cs</DependentUpon>
++    </Compile>
+     <Compile Include="frmAddModifyVendor.cs">
+       <SubType>Form</SubType>
+     </Compile>
+     <Compile Include="frmAddModifyVendor.Designer.cs">
+       <DependentUpon>frmAddModifyVendor.cs</DependentUpon>
+     </Compile>
++    <Compile Include="frmTerm.cs">
++      <SubType>Form</SubType>
++    </Compile>
++    <Compile Include="frmTerm.Designer.cs">
++      <DependentUpon>frmTerm.cs</DependentUpon>
++    </Compile>
+     <Compile Include="frmVendorMaintenance.cs">
+       <SubType>Form</SubType>
+     </Compile>
+@@ -83,6 +95,12 @@
+     <None Include="Payables.dbml.layout">
+       <DependentUpon>Payables.dbml</DependentUpon>
+     </None>
++    <EmbeddedResource Include="frmAddModifyTerm.resx">
++      <DependentUpon>frmAddModifyTerm.cs</DependentUpon>
++    </EmbeddedResource>
++    <EmbeddedResource Include="frmTerm.resx">
++      <DependentUpon>frmTerm.cs</DependentUpon>
++    </EmbeddedResource>
+     <EmbeddedResource Include="Properties\Resources.resx">
+       <Generator>ResXFileCodeGenerator</Generator>
+       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+-- 
+2.11.0.windows.1
+
